@@ -1,0 +1,27 @@
+*{
+    margin: 0rem;
+    padding: 0rem;
+    box-sizing: border-box;
+    font-family: 'Press Start 2P', cursive;
+    color: #F5F8FA;
+}
+
+body{
+    background-color: #191414;
+}
+
+h1{
+    text-align: center;
+    margin-block: 2rem;
+}
+
+#main-container{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+}
+
+#player1, #player2{
+    /* background-color: tomato; */
+    width: 50%;
+}
