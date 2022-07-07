@@ -21,6 +21,26 @@ body{
     background-color: #191414;
 }
 
+#main-container{
+    visibility: hidden;
+}
+
+#play{
+    visibility: visible;
+}
+
+#play>input{
+    cursor: pointer;
+    margin: 30%;
+    position: fixed;
+    width: 400px;
+    height: 100px;
+    /* color: var(--black); */
+    font-size: 38px;
+    background-color: var(--green);
+    
+}
+
 h1{
     text-align: center;
     margin-block: 2rem;
@@ -93,6 +113,12 @@ h1{
     height: 150px;
     display: grid;
 }
+
+.card:hover{
+    transform: translateY(-2rem);
+    cursor: pointer;
+}
+
 .card>p{
     color:var(--white);
     font-size: 3rem;
