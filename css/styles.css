@@ -27,18 +27,29 @@ body{
 
 #play{
     visibility: visible;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 3rem;
 }
-
-#play>input{
-    cursor: pointer;
-    margin: 30%;
-    position: fixed;
+.player-username, .enemy-username {
+    
+    padding: 1%;
     width: 400px;
     height: 100px;
-    /* color: var(--black); */
+    font-size: 38px;
+    background-color: var(--white);
+    color: var(--green);
+}
+
+#play>.play-btn{
+    cursor: pointer;
+    width: 400px;
+    height: 100px;
     font-size: 38px;
     background-color: var(--green);
-    
+    color: var(--white);
 }
 
 h1{

@@ -1,24 +1,17 @@
 'use strict'
 
-// geeting user username
 
-// const usrnm = prompt("choose a username : ");
-// const rbUsrnm = prompt("choose a name for your enemy : ");
-
-// if(usrnm !== null ){
-//     document.querySelector('.p2-username').innerHTML = usrnm;
-// }
-// if(rbUsrnm !== null){
-//     document.querySelector('.p1-username').innerHTML = rbUsrnm;
-// }
-
-// inordred cards 
 
 function play(){
+    const p1Name = document.querySelector('.player-username').value;
+    const p2Name = document.querySelector('.enemy-username').value;
     document.getElementById('main-container').style.visibility = 'visible';
-    document.getElementById('play').style.visibility = 'hidden';
-
+    document.getElementById('play').style.display = 'none';
+    document.querySelector('.p1-username').textContent = p1Name;
+    document.querySelector('.p2-username').textContent = p2Name;
+    
 }
+// console.log(p1Name, p2Name);
 
 const cardsTptal = 40;
 const cards = [1,2,3,4,5,6,7,10,11,12,1,2,3,4,5,6,7,10,11,12,1,2,3,4,5,6,7,10,11,12,1,2,3,4,5,6,7,10,11,12];
@@ -31,7 +24,7 @@ const rndmOrderCards = ()=>{
     }
     console.log(cards);
 }
-window.onload = 
+ 
 rndmOrderCards();
 
 // cards for players
@@ -63,32 +56,55 @@ cardToPlayer();
 
 // card to action area
 
-const cardToAction = function(){
+const logic = function(){
     
     const elms = document.querySelectorAll('.card')
+    const lastCardDropped = []
     
     elms.forEach( (elm)=>{
-        elm.addEventListener('click', ()=>{
-            const elmContent = Number (elm.textContent);
-            const whichPlayer = Number (elm.classList[1][1]);
-            console.log(`${elmContent}` , elm , whichPlayer, typeof(whichPlayer))
-            
+        
 
+        elm.addEventListener('click', ()=>{
             
-            document.querySelector('.action-cards').insertAdjacentHTML(`beforeend`,`<div class="card action-card-i"><p>${elmContent}</p></div>`)
-            qaae_card.push(elmContent)
-            console.log(document.querySelector('.action-cards').innerHTML);
-            elm.remove();
+            const whichPlayer = Number(elm.classList[1][1])
+            const elmContent = Number (elm.textContent);
+            const p2CountCards = document.querySelector(`.p2-cards`).childElementCount
+            const p1CountCards = document.querySelector(`.p1-cards`).childElementCount
+
+            // drop card turn logic
+            
+            const drop = function(){
+                document.querySelector('.action-cards').insertAdjacentHTML(`beforeend`,`<div class="card action-card-i"><p>${elmContent}</p></div>`)
+                qaae_card.push(elmContent)
+                elm.remove();        
+            }
+            
+            if(p1CountCards === p2CountCards && p1CountCards === 4){
+                drop()
+                lastCardDropped.push(whichPlayer)
+            }
+
+            else if(lastCardDropped[(lastCardDropped.length)-1] != whichPlayer)
+            {
+                drop()
+                lastCardDropped.push(whichPlayer)
+            }
+            
+            console.log(lastCardDropped);
+
+            // points logic
+        
+            
         })
+        
+        
+
     }
     )
     
     
 }
 
-cardToAction();
-
-
-
+logic();
 
 
