@@ -1,6 +1,6 @@
 'use strict'
 
-
+// => inserting usernames and play button
 
 function play(){
     const p1Name = document.querySelector('.player-username').value;
@@ -10,8 +10,10 @@ function play(){
     document.querySelector('.p1-username').textContent = p1Name;
     document.querySelector('.p2-username').textContent = p2Name;
     
+    
 }
-// console.log(p1Name, p2Name);
+
+// => Making cards ready for give it to players 
 
 const cardsTptal = 40;
 const cards = [1,2,3,4,5,6,7,10,11,12,1,2,3,4,5,6,7,10,11,12,1,2,3,4,5,6,7,10,11,12,1,2,3,4,5,6,7,10,11,12];
@@ -27,23 +29,24 @@ const rndmOrderCards = ()=>{
  
 rndmOrderCards();
 
-// cards for players
+// => giving cards to players
 
 const p1_cards = [];
 const p2_cards = [];
-const qaae_card = [];
 
 const randomCard = function(){
     for(let i = 0; i<20 ; i++){
         p1_cards.push(cards[i]);
         cards.shift(); 
         p2_cards.push(cards[i]);
-        // console.log(cards);
         cards.shift();
-        // console.log(cards);
     }
 }
 randomCard(); 
+
+const p1QaaeCard = [p1_cards[0],p1_cards[1],p1_cards[2],p1_cards[3]];
+const p2QaaeCard = [p2_cards[0],p2_cards[1],p2_cards[2],p2_cards[3]];
+const qaae_card = [];
 
 const cardToPlayer = function(){
     for(let i = 0; i<4 ; i++){
@@ -54,13 +57,45 @@ const cardToPlayer = function(){
 }
 cardToPlayer();
 
-// card to action area
+// => Game logic
 
 const logic = function(){
     
     const elms = document.querySelectorAll('.card')
+
+    // ==> points logic
+    
+    const pPoints = function(player, points){
+        let pp = document.querySelector(`.p${player}-score-box>p`).textContent
+        pp = Number(pp)+points
+        document.querySelector(`.p${player}-score-box>p`).textContent = pp
+    }
+
+    const roundaPoints = function(which_player){
+
+        for(let i = 0; i<which_player.length; i++){
+
+            for(let j = i+1 ; j < which_player.length; j++){
+
+                if(which_player[i] === which_player[j] && which_player === p1QaaeCard ){
+                    pPoints(1,1)
+                }
+                else if(which_player[i] === which_player[j] && which_player === p2QaaeCard){
+                    pPoints(2,1)
+                }
+
+            }
+        }
+    }
+
+
+    roundaPoints(p1QaaeCard);
+    roundaPoints(p2QaaeCard);
+
     const lastCardDropped = []
     
+    // ==> deep dive
+
     elms.forEach( (elm)=>{
         
 
@@ -71,12 +106,13 @@ const logic = function(){
             const p2CountCards = document.querySelector(`.p2-cards`).childElementCount
             const p1CountCards = document.querySelector(`.p1-cards`).childElementCount
 
-            // drop card turn logic
+            // ===> drop card turn logic
             
             const drop = function(){
                 document.querySelector('.action-cards').insertAdjacentHTML(`beforeend`,`<div class="card action-card-i"><p>${elmContent}</p></div>`)
                 qaae_card.push(elmContent)
-                elm.remove();        
+                elm.remove(); 
+                if(whichPlayer === 1){p1QaaeCard.splice(p1QaaeCard.indexOf(elmContent),1,)} 
             }
             
             if(p1CountCards === p2CountCards && p1CountCards === 4){
@@ -90,10 +126,18 @@ const logic = function(){
                 lastCardDropped.push(whichPlayer)
             }
             
-            console.log(lastCardDropped);
+            // ===> cards fight with points
 
-            // points logic
-        
+            const cardsFight = function(){
+                if(qaae_card[qaae_card.length-2] === qaae_card[qaae_card.length-1] ){
+                    console.log('yes');
+                    pPoints(whichPlayer,1)
+                }
+                console.warn(qaae_card , qaae_card[qaae_card.length-2], qaae_card[qaae_card.length-1]);
+            }
+            cardsFight()
+          
+            
             
         })
         
