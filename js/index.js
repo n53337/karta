@@ -33,6 +33,8 @@ rndmOrderCards();
 
 const p1_cards = [];
 const p2_cards = [];
+const p1EarnedCards = [];
+const p2EarnedCards = [];
 
 const randomCard = function(){
     for(let i = 0; i<20 ; i++){
@@ -98,8 +100,8 @@ const logic = function(){
 
     elms.forEach( (elm)=>{
         
-
         elm.addEventListener('click', ()=>{
+            
             
             const whichPlayer = Number(elm.classList[1][1])
             const elmContent = Number (elm.textContent);
@@ -128,16 +130,63 @@ const logic = function(){
             
             // ===> cards fight with points
 
-            const cardsFight = function(){
-                if(qaae_card[qaae_card.length-2] === qaae_card[qaae_card.length-1] ){
-                    console.log('yes');
-                    pPoints(whichPlayer,1)
+            const cardsFight = ()=>{
+
+                let x = document.querySelectorAll('.action-card-i')
+
+                const makla = ()=>{
+                
+                    for(let i = 0; i<qaae_card.length-1; i++){
+
+                        if(qaae_card[qaae_card.length-1] === qaae_card[i]){
+
+                            const maklaLogic = (pEarnedcards)=>{
+
+                                pEarnedcards.push(Number(x[x.length-1].textContent), Number(x[i].textContent))
+                                
+                                const maklaSearch = ()=>{
+
+                                    for(let i = 0; i < qaae_card.length; i++){
+                                        
+                                        if(pEarnedcards[pEarnedcards.length-1]+1 === qaae_card[i]){
+
+                                            pEarnedcards.push(Number(qaae_card[i]))
+                                            maklaSearch();
+                                            
+                                        }
+                                    }
+                                }
+
+                                maklaSearch();
+                                console.log(` player:${whichPlayer}, earned cards ${pEarnedcards}, qaae card: ${qaae_card}`);
+                            }
+                                 
+                            if(whichPlayer === 1){
+
+                                maklaLogic(p1EarnedCards)
+                            }
+
+                            else if(whichPlayer === 2){
+
+                                maklaLogic(p2EarnedCards)
+                            }
+
+                            // setTimeout(() => {
+                            //     x[x.length-1].remove()
+                            //     x[i].remove()
+                            // }, 500);
+                        }    
+                    }
                 }
-                console.warn(qaae_card , qaae_card[qaae_card.length-2], qaae_card[qaae_card.length-1]);
+                
+                // bont()
+                
+                makla()
+                
+                
             }
             cardsFight()
-          
-            
+
             
         })
         
