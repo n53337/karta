@@ -102,6 +102,7 @@ const logic = function(){
         
         elm.addEventListener('click', ()=>{
             
+
             
             const whichPlayer = Number(elm.classList[1][1])
             const elmContent = Number (elm.textContent);
@@ -114,7 +115,8 @@ const logic = function(){
                 document.querySelector('.action-cards').insertAdjacentHTML(`beforeend`,`<div class="card action-card-i"><p>${elmContent}</p></div>`)
                 qaae_card.push(elmContent)
                 elm.remove(); 
-                if(whichPlayer === 1){p1QaaeCard.splice(p1QaaeCard.indexOf(elmContent),1,)} 
+                if(whichPlayer === 1){p1QaaeCard.splice(p1QaaeCard.indexOf(elmContent),1,)}
+                else if(whichPlayer === 2){p2QaaeCard.splice(p2QaaeCard.indexOf(elmContent),1,)}
             }
             
             if(p1CountCards === p2CountCards && p1CountCards === 4){
@@ -133,7 +135,7 @@ const logic = function(){
             const cardsFight = ()=>{
 
                 let x = document.querySelectorAll('.action-card-i')
-
+                
                 const makla = ()=>{
                 
                     for(let i = 0; i<qaae_card.length-1; i++){
@@ -142,19 +144,39 @@ const logic = function(){
 
                             const maklaLogic = (pEarnedcards)=>{
 
-                                pEarnedcards.push(Number(x[x.length-1].textContent), Number(x[i].textContent))
+                                const rmvElm = (rmElm, delay, color, rm)=>{
+                                    rmElm.style.backgroundColor = color;
+                                    setTimeout(()=>{
+                                        if(rm === true){rmElm.remove()}
+                                    },delay)
+                                }
+
+                                pEarnedcards.push(qaae_card[qaae_card.length-1], qaae_card[i])
+                                console.log(qaae_card)
                                 
+                                
+                                rmvElm(x[qaae_card.indexOf(qaae_card[qaae_card.length-1])],400,'tomato')
+                                rmvElm(x[qaae_card.indexOf(qaae_card[i])],400,'tomato')
+                                qaae_card.splice(qaae_card.length-1, 1)
+                                qaae_card.splice(qaae_card.indexOf(qaae_card[i]), 1)
+                                
+
                                 const maklaSearch = ()=>{
 
-                                    for(let i = 0; i < qaae_card.length; i++){
-                                        
-                                        if(pEarnedcards[pEarnedcards.length-1]+1 === qaae_card[i]){
+                                    for(let j = 0; j<qaae_card.length; j++){
 
-                                            pEarnedcards.push(Number(qaae_card[i]))
-                                            maklaSearch();
-                                            
+                                        if(qaae_card[j]-1 === pEarnedcards[pEarnedcards.length-1]){
+
+                                            pEarnedcards.push(qaae_card[j])
+                                            console.warn(qaae_card[j]);
+
+
+                                            qaae_card.splice(qaae_card.indexOf(qaae_card[j]),1)
+                                            maklaSearch()
+
                                         }
                                     }
+                                   
                                 }
 
                                 maklaSearch();
@@ -171,10 +193,6 @@ const logic = function(){
                                 maklaLogic(p2EarnedCards)
                             }
 
-                            // setTimeout(() => {
-                            //     x[x.length-1].remove()
-                            //     x[i].remove()
-                            // }, 500);
                         }    
                     }
                 }
@@ -187,7 +205,6 @@ const logic = function(){
             }
             cardsFight()
 
-            
         })
         
         
@@ -199,5 +216,3 @@ const logic = function(){
 }
 
 logic();
-
-

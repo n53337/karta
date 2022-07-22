@@ -24,4 +24,3 @@
 4- the player who reachs 41points win the game
 
 5- when you make 20points you'll get a notification says that you just get a badge called "sgheer", 21points you'll get another badge called "kbeer" !
-

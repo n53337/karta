@@ -2,8 +2,8 @@
 [x] Use css Grid and Flexbox
 ============================== Game Logic ==============================  
 
-[] a quick ui to let the user choose his name
-[] Player can choose his name and the who against him's name !
+[x] a quick ui to let the user choose his name
+[x] Player can choose his name and the who against him's name !
 [] Play with a robot
 [] Wim Lose state
 [] inGame options
@@ -30,5 +30,5 @@
 =============== game logic =========
 
 [] the player make smth to collect his luck on who's gonna play first
-[] when the first player drop a card he must wait for his enemy to drop his own as well
-[] if the player has sme card two/three times got points
+[x] when the first player drop a card he must wait for his enemy to drop his own as well
+[x] if the player has sme card two/three times got points
