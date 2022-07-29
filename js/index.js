@@ -20,7 +20,7 @@ const cards = [
                 {n:1, key:'1b'}, {n:2, key:'2b'},{n:3, key:'3b'},{n:4, key:'4b'},{n:5, key:'5b'},{n:6, key:'6b'},{n:7, key:'7b'},{n:10, key:'10b'},{n:11, key:'11b'},{n:12, key:'12b'},
                 {n:1, key:'1c'}, {n:2, key:'2c'},{n:3, key:'3c'},{n:4, key:'4c'},{n:5, key:'5c'},{n:6, key:'6c'},{n:7, key:'7c'},{n:10, key:'10c'},{n:11, key:'11c'},{n:12, key:'12c'},
                 {n:1, key:'1d'}, {n:2, key:'2d'},{n:3, key:'3d'},{n:4, key:'4d'},{n:5, key:'5d'},{n:6, key:'6d'},{n:7, key:'7d'},{n:10, key:'10d'},{n:11, key:'11d'},{n:12, key:'12d'},
-              ]
+              ];
 
 // => Flipping cards
 
@@ -43,13 +43,20 @@ const p1EarnedCards = [];
 const p2EarnedCards = [];
 
 const randomCard = function(){
+
     for(let i = 0; i<20 ; i++){
+
         p1_cards.push(cards[i]);
+
     }
+
     for(let j = 20; j<40 ; j++){
+
         p2_cards.push(cards[j]);
+
     }
-    cards.splice(0,cards.length)
+
+    cards.splice(0,cards.length);
 }
 randomCard(); 
 
@@ -58,29 +65,33 @@ const p2QaaeCard = [p2_cards[0],p2_cards[1],p2_cards[2],p2_cards[3]];
 const qaae_card = [];
 
 const cardToPlayer = function(){
+
     for(let i = 0; i<4 ; i++){
+        
         document.querySelector(`.p1-card${i+1}>p`).innerHTML = p1_cards[i].n;
         document.querySelector(`.p1-card${i+1}>h2`).innerHTML = p1_cards[i].key.slice(-1);
         document.querySelector(`.p2-card${i+1}>p`).innerHTML = p2_cards[i].n;
         document.querySelector(`.p2-card${i+1}>h2`).innerHTML = p2_cards[i].key.slice(-1);
+
     }
     
 }
+
 cardToPlayer();
 
 // => Game logic
 
 const logic = function(){
     
-    const elms = document.querySelectorAll('.card')
+    const elms = document.querySelectorAll('.card');
     
     // ==> points logic
 
     const pPoints = function(player, points){
 
-        let pp = document.querySelector(`.p${player}-score-box>p`).textContent
-        pp = Number(pp)+points
-        document.querySelector(`.p${player}-score-box>p`).textContent = pp
+        let pp = document.querySelector(`.p${player}-score-box>p`).textContent;
+        pp = Number(pp)+points;
+        document.querySelector(`.p${player}-score-box>p`).textContent = pp;
 
     }
     
@@ -91,12 +102,13 @@ const logic = function(){
             for(let j = i+1 ; j < which_player.length; j++){
                 
                 if(which_player[i].n === which_player[j].n && which_player === p1QaaeCard ){
-                    pPoints(1,1)
-                }
-                else if(which_player[i].n === which_player[j].n && which_player === p2QaaeCard){
-                    pPoints(2,1)
+                    pPoints(1,1);
                 }
                 
+                else if(which_player[i].n === which_player[j].n && which_player === p2QaaeCard){
+                    pPoints(2,1);
+                }
+
             }
         }
     }
@@ -104,79 +116,100 @@ const logic = function(){
     roundaPoints(p1QaaeCard);
     roundaPoints(p2QaaeCard);
     
-    const lastCardDropped = []
+    const lastCardDropped = [];
     
     // ==> deep dive
     
     elms.forEach( (elm)=>{
         
         elm.addEventListener('click', ()=>{
-            
-            const whichPlayer = Number(elm.classList[1][1])
+
+            const relms = document.querySelectorAll('.rcard');
+
+            let whichPlayer;
+
+            // robot
+
+            const rr = relms[Math.floor(Math.random()*relms.length)];
+            const relmContent = Number (rr.firstChild.textContent);
+            const relmTxtContent = rr.children[1].textContent;
+            const relmKey = relmContent+relmTxtContent;
+            const rCountCards = document.querySelector(`.p1-cards`).childElementCount;
+
+            // player
+
+            const p2CountCards = document.querySelector(`.p2-cards`).childElementCount;   
             const elmContent = Number (elm.firstChild.textContent);
-            const elmTxtContent = elm.children[1].textContent
-            const elmKey = elmContent+elmTxtContent
-            const p2CountCards = document.querySelector(`.p2-cards`).childElementCount
-            const p1CountCards = document.querySelector(`.p1-cards`).childElementCount
-            
-            // ===> drop card turn logic
+            const elmTxtContent = elm.children[1].textContent;
+            const elmKey = elmContent+elmTxtContent;
 
             const _index =(arr, item)=>{
+
                 const a = arr.findIndex(x=>{
-                    return x.key === item 
+
+                    return x.key === item ;
+
                 })
-                return a
+
+                return a;
             }
 
-            const drop = function(){
 
-                document.querySelector('.action-cards').insertAdjacentHTML(`beforeend`,`<div class="card action-card-i"><p>${elmContent}</p><h2>${elmTxtContent}</h2></div>`)
-                qaae_card.push({n:elmContent, key:elmKey})
+            const drop = function(content, txtcontent, element){
+
+                document.querySelector('.action-cards').insertAdjacentHTML(`beforeend`,`<div class="card action-card-i"><p>${content}</p><h2>${txtcontent}</h2></div>`);
+                qaae_card.push({n:content, key:txtcontent});
+        
+                element.remove(); 
                 
-                elm.remove(); 
-                if(whichPlayer === 1){p1QaaeCard.splice(_index(p1QaaeCard, elmKey),1);}
-                else if(whichPlayer === 2){p2QaaeCard.splice(_index(p2QaaeCard, elmKey),1)}
-                
-            }
-            
-            //  ===> player turn logic
+                if(element === rr){p1QaaeCard.splice(_index(p1QaaeCard, elmKey),1);}
+                else if(element === elm){p2QaaeCard.splice(_index(p2QaaeCard, elmKey),1)}
 
-            if(p1CountCards === p2CountCards && p1CountCards === 4){
-                drop()
-                lastCardDropped.push(whichPlayer)
+            }
+
+
+            const cDrop = ()=>{
+
+                drop(elmContent, elmTxtContent, elm);
+                lastCardDropped.push(2);
+
+            }
+
+            if(rCountCards === p2CountCards && p2CountCards === 4){
+                cDrop();
             }
             
-            else if(lastCardDropped[(lastCardDropped.length)-1] != whichPlayer)
-            {
-                drop()
-                lastCardDropped.push(whichPlayer)
+            else if(lastCardDropped[lastCardDropped.length-1] === 1 && rCountCards === p2CountCards){
+                cDrop();
             }
-            
+
+
             // ===> cards fight with points
             
             const cardsFight = ()=>{
 
-                let x = document.querySelectorAll('.action-card-i')
-                
+               
+                let x = document.querySelectorAll('.action-card-i');
+
                 for(let i = 0; i<qaae_card.length-1; i++){
 
                     const makla = (qc)=>{
+                        
+                        const maklaLogic = (pEarnedcards)=>{
                             
-                            const maklaLogic = (pEarnedcards)=>{
-
-                                const rmvElm = (rmElm, delay, color, rm)=>{
+                            const rmvElm = (rmElm, delay, color, rm)=>{
 
                                     rmElm.style.backgroundColor = color;
                                     setTimeout(()=>{
-                                        if(rm === true){rmElm.remove()}
+                                        if(rm === true){rmElm.remove();}
                                     },delay)
                                 }
                                 
                                 const rmvCardFromQaae = (_key, delay, color, rm)=>{
-                                     
+                                    
                                     for(let j = 0; j<x.length; j++){
                                         if(x[j].textContent === _key){
-                                            rmvElm(x[j], delay, color, rm)     
+                                            rmvElm(x[j], delay, color, rm);
                                         }
                                     }
                                     
@@ -184,30 +217,32 @@ const logic = function(){
                                 
                                 pEarnedcards.push(qaae_card[qaae_card.length-1], qaae_card[qc]);
                                 
-                                rmvCardFromQaae(qaae_card[qaae_card.length-1].key, 1000, 'tomato', true );
-                                rmvCardFromQaae(qaae_card[qc].key, 1200, 'tomato', true)
+                                rmvCardFromQaae(qaae_card[qaae_card.length-1].n + qaae_card[qaae_card.length-1].key, 500, 'tomato', true );
+                                rmvCardFromQaae(qaae_card[qc].n + qaae_card[qc].key, 500, 'tomato', true);
                                 
-                                qaae_card.splice(qaae_card.length-1, 1)
-                                qaae_card.splice(qaae_card.indexOf(qaae_card[qc]), 1)
+                                qaae_card.splice(qaae_card.length-1, 1);
+                                qaae_card.splice(qaae_card.indexOf(qaae_card[qc]), 1);
                                 
                                 const maklaSearch = ()=>{
+                                    
+                                    // console.warn(qaae_card[qaae_card.length-1].n + qaae_card[qaae_card.length-1].key, 'is working');
 
                                     for(let j = 0; j<qaae_card.length; j++){
 
                                         if(qaae_card[j].n -1 === pEarnedcards[pEarnedcards.length-1].n){
 
-                                            pEarnedcards.push(qaae_card[j])
-                                            rmvCardFromQaae(qaae_card[j].key, 1600, 'purple', true)
-                                            qaae_card.splice(qaae_card.indexOf(qaae_card[j]),1)
-                                            maklaSearch()
+                                            pEarnedcards.push(qaae_card[j]);
+                                            rmvCardFromQaae(qaae_card[j].n + qaae_card[j].key, 500, 'purple', true);
+                                            qaae_card.splice(qaae_card.indexOf(qaae_card[j]),1);
+                                            maklaSearch();
 
                                         }
                                         else if(qaae_card[j].n -3 === pEarnedcards[pEarnedcards.length-1].n && qaae_card[j].n === 10 ){
                                             
-                                            pEarnedcards.push(qaae_card[j])
-                                            rmvCardFromQaae(qaae_card[j].key, 1600, 'purple', true)
-                                            qaae_card.splice(qaae_card.indexOf(qaae_card[j]),1)
-                                            maklaSearch()
+                                            pEarnedcards.push(qaae_card[j]);
+                                            rmvCardFromQaae(qaae_card[j].n + qaae_card[j].key, 500, 'purple', true);
+                                            qaae_card.splice(qaae_card.indexOf(qaae_card[j]),1);
+                                            maklaSearch();
                                         }
                                     }
                                    
@@ -218,18 +253,18 @@ const logic = function(){
                                 // ===> Missa
                                 
                                 if(qaae_card.length === 0){
-                                    pPoints(whichPlayer, 1)
+                                    pPoints(lastCardDropped[lastCardDropped.length-1], 1);
                                 }
                             }
                                  
-                            if(whichPlayer === 1){
+                            if(lastCardDropped[lastCardDropped.length-1] === 1){
 
-                                maklaLogic(p1EarnedCards)
+                                maklaLogic(p1EarnedCards);
                             }
 
-                            else if(whichPlayer === 2){
+                            else if(lastCardDropped[lastCardDropped.length-1] === 2){
 
-                                maklaLogic(p2EarnedCards)
+                                maklaLogic(p2EarnedCards);
                             }
 
                             
@@ -238,28 +273,54 @@ const logic = function(){
                         // ==> bunt
 
                         if(qaae_card[qaae_card.length-1].n === qaae_card[qaae_card.length-2].n && qaae_card.length >= 2){
-                            makla(qaae_card.length-2)
-                            pPoints(whichPlayer, 1)
+
+                            makla(qaae_card.length-2);
+                            pPoints(lastCardDropped[lastCardDropped.length-1], 1);
+
                         }
                         
                         // ==> the default makla
 
                         else if(qaae_card[qaae_card.length-1].n === qaae_card[i].n){
-                            makla(i)
+                            makla(i);
                         }
                     }
-                       
+                    
                 
-                
-                
+
             }
+
             cardsFight()
 
+            setTimeout(() => {
+                drop(relmContent, relmTxtContent, rr);
+                lastCardDropped.push(1);
+                cardsFight();
+            }, 2000);
+            
+            
         })
+            
+        
+    })
+
+        
+   
+        
+
+
+
+
+
+
+  
+
+       
+        
+            
           
 
-    }
-    )
+    
     
     
 }
@@ -269,7 +330,7 @@ logic();
 p1_cards.splice(0,4); 
 p2_cards.splice(0,4);
 
-window.onbeforeunload = e => {
-    return "Do you want to exit this page?";
-};
+// window.onbeforeunload = e => {
+//     return "Do you want to exit this page?";
+// };
 

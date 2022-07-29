@@ -135,3 +135,21 @@ h1{
     font-size: 3rem;
     align-self: center;
 }
+
+.rcard{
+    justify-self: center;
+    background-color: var(--green);
+    border: 2px 10px solid var(--green);
+    width: 100px;
+    height: 150px;
+
+}
+
+.rcard>p, .rcard>h2{
+    display: none;
+}
+
+.rcard>h1{
+    font-size: 4rem;
+    color: var(--white);
+}
