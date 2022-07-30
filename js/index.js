@@ -2,15 +2,17 @@
 
 // => inserting usernames and play button
 
+let playClicked ;
+
 function play(){
+
     const p1Name = document.querySelector('.player-username').value;
     const p2Name = document.querySelector('.enemy-username').value;
     document.getElementById('main-container').style.visibility = 'visible';
     document.getElementById('play').style.display = 'none';
     document.querySelector('.p1-username').textContent = p1Name;
     document.querySelector('.p2-username').textContent = p2Name;
-    
-    
+
 }
 
 // => Making cards ready for give it to players 
@@ -31,7 +33,7 @@ const rndmOrderCards = ()=>{
         const dtd = cards.splice(i, 1)[0];
         cards.splice(rmd, 0, dtd);
     }
-}
+};
  
 rndmOrderCards();
 
@@ -57,27 +59,65 @@ const randomCard = function(){
     }
 
     cards.splice(0,cards.length);
-}
+};
+
 randomCard(); 
 
-const p1QaaeCard = [p1_cards[0],p1_cards[1],p1_cards[2],p1_cards[3]];
-const p2QaaeCard = [p2_cards[0],p2_cards[1],p2_cards[2],p2_cards[3]];
-const qaae_card = [];
+function karta(_add) {
+    
+    document.querySelector('.p1-cards').insertAdjacentHTML(`beforeend`, `<div class="rcard p1-card1"><p>K</p><h2>a</h6><h1>K</h1></div>
+    <div class="rcard p1-card2"><p>K</p><h2>a</h6><h1>K</h1></div>
+    <div class="rcard p1-card3"><p>K</p><h2>a</h6><h1>K</h1></div>
+    <div class="rcard p1-card4"><p>K</p><h2>a</h6><h1>K</h1></div>`)
+    
+    document.querySelector('.p2-cards').insertAdjacentHTML(`beforeend`, `<div class="card p2-card1"><p>K</p><h2>a</h6></div>
+    <div class="card p2-card2"><p>K</p><h2>a</h6></div>
+    <div class="card p2-card3"><p>K</p><h2>a</h6></div>
+    <div class="card p2-card4"><p>K</p><h2>a</h6></div>`)
+    
+    
+    const p1QaaeCard = [p1_cards[0],p1_cards[1],p1_cards[2],p1_cards[3]];
+    const p2QaaeCard = [p2_cards[0],p2_cards[1],p2_cards[2],p2_cards[3]];
+    
+    let qaae_card = [] ;
 
+    if (_add != undefined) {
+        
+        qaae_card.push(..._add);
+
+    }
+    const _index =(arr, item)=>{
+
+        const a = arr.findIndex(x=>{
+
+            return x.key === item ;
+
+        });
+
+        return a;
+    };
+
+ 
 const cardToPlayer = function(){
-
+            
     for(let i = 0; i<4 ; i++){
         
         document.querySelector(`.p1-card${i+1}>p`).innerHTML = p1_cards[i].n;
         document.querySelector(`.p1-card${i+1}>h2`).innerHTML = p1_cards[i].key.slice(-1);
         document.querySelector(`.p2-card${i+1}>p`).innerHTML = p2_cards[i].n;
         document.querySelector(`.p2-card${i+1}>h2`).innerHTML = p2_cards[i].key.slice(-1);
-
+        
     }
-    
-}
+};
 
 cardToPlayer();
+
+for(let i = 0; i<p1QaaeCard.length; i++){
+    
+    p1_cards.splice(_index(p1_cards, p1QaaeCard[i].key),1);
+    p2_cards.splice(_index(p2_cards, p2QaaeCard[i].key),1);
+
+}
 
 // => Game logic
 
@@ -93,7 +133,7 @@ const logic = function(){
         pp = Number(pp)+points;
         document.querySelector(`.p${player}-score-box>p`).textContent = pp;
 
-    }
+    };
     
     const roundaPoints = function(which_player){
         
@@ -111,8 +151,8 @@ const logic = function(){
 
             }
         }
-    }
-    
+    };
+   
     roundaPoints(p1QaaeCard);
     roundaPoints(p2QaaeCard);
     
@@ -143,18 +183,7 @@ const logic = function(){
             const elmTxtContent = elm.children[1].textContent;
             const elmKey = elmContent+elmTxtContent;
 
-            const _index =(arr, item)=>{
-
-                const a = arr.findIndex(x=>{
-
-                    return x.key === item ;
-
-                })
-
-                return a;
-            }
-
-
+        
             const drop = function(content, txtcontent, element){
 
                 document.querySelector('.action-cards').insertAdjacentHTML(`beforeend`,`<div class="card action-card-i"><p>${content}</p><h2>${txtcontent}</h2></div>`);
@@ -165,7 +194,7 @@ const logic = function(){
                 if(element === rr){p1QaaeCard.splice(_index(p1QaaeCard, elmKey),1);}
                 else if(element === elm){p2QaaeCard.splice(_index(p2QaaeCard, elmKey),1)}
 
-            }
+            };
 
 
             const cDrop = ()=>{
@@ -173,7 +202,7 @@ const logic = function(){
                 drop(elmContent, elmTxtContent, elm);
                 lastCardDropped.push(2);
 
-            }
+            };
 
             if(rCountCards === p2CountCards && p2CountCards === 4){
                 cDrop();
@@ -183,12 +212,12 @@ const logic = function(){
                 cDrop();
             }
 
-
             // ===> cards fight with points
             
             const cardsFight = ()=>{
 
-               
+                let lastPlayerEarned;
+
                 let x = document.querySelectorAll('.action-card-i');
 
                 for(let i = 0; i<qaae_card.length-1; i++){
@@ -200,20 +229,23 @@ const logic = function(){
                             const rmvElm = (rmElm, delay, color, rm)=>{
 
                                     rmElm.style.backgroundColor = color;
+
                                     setTimeout(()=>{
                                         if(rm === true){rmElm.remove();}
                                     },delay)
-                                }
+
+                                };
                                 
                                 const rmvCardFromQaae = (_key, delay, color, rm)=>{
                                     
                                     for(let j = 0; j<x.length; j++){
+
                                         if(x[j].textContent === _key){
                                             rmvElm(x[j], delay, color, rm);
                                         }
                                     }
                                     
-                                }
+                                };
                                 
                                 pEarnedcards.push(qaae_card[qaae_card.length-1], qaae_card[qc]);
                                 
@@ -225,8 +257,6 @@ const logic = function(){
                                 
                                 const maklaSearch = ()=>{
                                     
-                                    // console.warn(qaae_card[qaae_card.length-1].n + qaae_card[qaae_card.length-1].key, 'is working');
-
                                     for(let j = 0; j<qaae_card.length; j++){
 
                                         if(qaae_card[j].n -1 === pEarnedcards[pEarnedcards.length-1].n){
@@ -243,19 +273,22 @@ const logic = function(){
                                             rmvCardFromQaae(qaae_card[j].n + qaae_card[j].key, 500, 'purple', true);
                                             qaae_card.splice(qaae_card.indexOf(qaae_card[j]),1);
                                             maklaSearch();
+
                                         }
                                     }
                                    
-                                }
+                                };
 
                                 maklaSearch();
                                 
                                 // ===> Missa
                                 
                                 if(qaae_card.length === 0){
+
                                     pPoints(lastCardDropped[lastCardDropped.length-1], 1);
+
                                 }
-                            }
+                            };
                                  
                             if(lastCardDropped[lastCardDropped.length-1] === 1){
 
@@ -268,25 +301,49 @@ const logic = function(){
                             }
 
                             
-                        }
+                        };
                         
                         // ==> bunt
 
                         if(qaae_card[qaae_card.length-1].n === qaae_card[qaae_card.length-2].n && qaae_card.length >= 2){
 
                             makla(qaae_card.length-2);
+
                             pPoints(lastCardDropped[lastCardDropped.length-1], 1);
 
+                            lastPlayerEarned = lastCardDropped[lastCardDropped.length-1];
+
+                            console.log(lastPlayerEarned);
+                            
                         }
                         
                         // ==> the default makla
 
                         else if(qaae_card[qaae_card.length-1].n === qaae_card[i].n){
+
                             makla(i);
+                            lastPlayerEarned = lastCardDropped[lastCardDropped.length-1];
+
                         }
-                    }
+                        
+                        if(p1QaaeCard.length === 0 && p2QaaeCard.length === 0 && p1_cards.length === 0 ) {
+    
+                            if (lastPlayerEarned === 1) {
+                                p1EarnedCards.push(...qaae_card);
+                            }
+
+                            else if (lastPlayerEarned === 2) {
+                                p2EarnedCards.push(...qaae_card);
+                            }
+
+                        }
                     
-                
+                    };
+
+                    
+                    if (p1QaaeCard.length === 0 && p2QaaeCard.length === 0) { 
+                        karta(qaae_card);
+                    }
 
             }
 
@@ -296,41 +353,25 @@ const logic = function(){
                 drop(relmContent, relmTxtContent, rr);
                 lastCardDropped.push(1);
                 cardsFight();
-            }, 2000);
+            }, 800);
             
             
-        })
+        });
             
         
-    })
+    });
 
-        
-   
-        
-
-
-
-
-
-
-  
-
-       
-        
-            
-          
-
-    
-    
-    
-}
+      
+};
 
 logic();
 
-p1_cards.splice(0,4); 
-p2_cards.splice(0,4);
+};
 
-// window.onbeforeunload = e => {
-//     return "Do you want to exit this page?";
-// };
+karta();
+
+
+window.onbeforeunload = e => {
+    return "Do you want to exit this page?";
+};
 
