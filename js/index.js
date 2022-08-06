@@ -17,6 +17,96 @@ function play(){
 
 // => Making cards ready for give it to players
 
+function kartaCore() {
+
+// => Temlates
+
+    // * PopUp Template *
+
+    const popUp = (_round, _p1Points, _p2Points)=>{
+
+        document.getElementById('main-container').style.filter = 'blur(2rem)';
+
+        document.getElementsByTagName('html')[0].insertAdjacentHTML(`beforeend`,`<aside id="popup">
+        <h1>Round${_round}</h1><div class="p-results">
+
+            <div class="p1">
+                <h2>Player 1</h2>
+                <p>${_p1Points}</p>
+            </div>
+
+            <div class="p2">
+                <h2>Player 2</h2>
+                <p>${_p2Points}</p>
+            </div>
+        </div>
+        <div class="btns">
+            <button class="next">Next Round</button>
+            <button class="exit">exit</button>
+        </div>
+
+        </aside>
+
+        <style>
+
+        #popup{
+            position: absolute;
+            margin: auto;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: 700px;
+            height: 700px;
+            background-color: var(--green);
+            border-radius: 30px;
+            display: grid;
+            grid-template-rows: 25% 60% 15%;
+        }
+        #popup>h1{
+            align-self: center;
+            font-size: 3rem;
+        }
+        #popup>.p-results{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .p-results>.p1, .p-results>.p2{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            border: var(--white) 2px solid;
+
+        }
+
+        .p-results>.p1>h2, .p-results>.p2>h2, .p-results>.p1>p, .p-results>.p2>p {
+            align-self: center;
+            font-size: 1.5rem;
+        }
+
+        .p-results>.p1>p, .p-results>.p2>p{
+            font-size: 2.5rem;
+        }
+
+        #popup>.btns{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        #popup>.btns>button{
+            color: var(--green);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        </style>
+
+        `)
+
+    }
+
+    // popUp();
+
 const cards = [
                 {n:1, key:'1a'}, {n:2, key:'2a'},{n:3, key:'3a'},{n:4, key:'4a'},{n:5, key:'5a'},{n:6, key:'6a'},{n:7, key:'7a'},{n:10, key:'10a'},{n:11, key:'11a'},{n:12, key:'12a'},
                 {n:1, key:'1b'}, {n:2, key:'2b'},{n:3, key:'3b'},{n:4, key:'4b'},{n:5, key:'5b'},{n:6, key:'6b'},{n:7, key:'7b'},{n:10, key:'10b'},{n:11, key:'11b'},{n:12, key:'12b'},
@@ -65,6 +155,9 @@ randomCard();
 
 function karta(_add, _lastPlayerEarned) {
 
+    let cardAvaliable = true;
+    let p2Points;
+    let p1Points;
     document.querySelector('.p1-cards').insertAdjacentHTML(`beforeend`, `<div class="rcard p1-card1"><p>K</p><h2>a</h6><h1>K</h1></div>
     <div class="rcard p1-card2"><p>K</p><h2>a</h6><h1>K</h1></div>
     <div class="rcard p1-card3"><p>K</p><h2>a</h6><h1>K</h1></div>
@@ -136,6 +229,8 @@ const logic = function(){
         pp = Number(pp)+points;
         document.querySelector(`.p${player}-score-box>p`).textContent = pp;
 
+        p2Points = Number(document.querySelector(`.p2-score-box>p`).textContent);
+        p1Points = Number(document.querySelector(`.p1-score-box>p`).textContent);
     };
 
     const roundaPoints = function(which_player){
@@ -168,8 +263,6 @@ const logic = function(){
         elm.addEventListener('click', ()=>{
 
             const relms = document.querySelectorAll('.rcard');
-
-            let whichPlayer;
 
             // robot
 
@@ -219,6 +312,26 @@ const logic = function(){
 
             const cardsFight = ()=>{
 
+                const rmvElm = (rmElm, delay, color, rm)=>{
+
+                    rmElm.style.backgroundColor = color;
+
+                    setTimeout(()=>{
+                        if(rm === true){rmElm.remove();}
+                    },delay)
+
+                };
+
+                const rmvCardFromQaae = (_key, delay, color, rm)=>{
+
+                    for(let j = 0; j<x.length; j++){
+
+                        if(x[j].textContent === _key){
+                            rmvElm(x[j], delay, color, rm);
+                        }
+                    }
+
+                };
 
                 let x = document.querySelectorAll('.action-card-i');
 
@@ -227,27 +340,6 @@ const logic = function(){
                     const makla = (qc)=>{
 
                         const maklaLogic = (pEarnedcards)=>{
-
-                            const rmvElm = (rmElm, delay, color, rm)=>{
-
-                                    rmElm.style.backgroundColor = color;
-
-                                    setTimeout(()=>{
-                                        if(rm === true){rmElm.remove();}
-                                    },delay)
-
-                                };
-
-                                const rmvCardFromQaae = (_key, delay, color, rm)=>{
-
-                                    for(let j = 0; j<x.length; j++){
-
-                                        if(x[j].textContent === _key){
-                                            rmvElm(x[j], delay, color, rm);
-                                        }
-                                    }
-
-                                };
 
                                 pEarnedcards.push(qaae_card[qaae_card.length-1], qaae_card[qc]);
 
@@ -316,8 +408,6 @@ const logic = function(){
 
                             lastPlayerEarned = lastCardDropped[lastCardDropped.length-1];
 
-                            console.log(`lastPlayerEarned: ${lastPlayerEarned}`);
-
                         }
 
                         // ==> the default makla
@@ -328,30 +418,39 @@ const logic = function(){
 
                             lastPlayerEarned = lastCardDropped[lastCardDropped.length-1];
 
-                            console.log(`lastPlayerEarned: ${lastPlayerEarned}`);
-
                         }
+
+                        // ==> Round end
 
                         if(p1QaaeCard.length === 0 && p2QaaeCard.length === 0 && p1_cards.length === 0 ) {
 
                             console.warn('salatt', `lastPlayerEarned: ${lastPlayerEarned}`);
 
-                            console.warn(qaae_card);
-
                             if (lastPlayerEarned === 1) p1EarnedCards.push(...qaae_card);
 
                             else if (lastPlayerEarned === 2) p2EarnedCards.push(...qaae_card);
 
-                            qaae_card.splice(0,qaae_card.length-1);
+                            for(let i = 0; i<qaae_card.length; i++) rmvCardFromQaae(qaae_card[i].n + qaae_card[i].key, 700, 'yellow', true)
+
+                            qaae_card.splice(0,qaae_card.length);
+
+                            cardAvaliable = false;
 
                         }
-
                     };
 
-                    console.warn(`lastPlayerEarned outside fun: ${lastPlayerEarned}`);
 
-                    if (p1QaaeCard.length === 0 && p2QaaeCard.length === 0) {
-                        karta(qaae_card, lastPlayerEarned);
+                    if (p1QaaeCard.length === 0 && p2QaaeCard.length === 0 && cardAvaliable === true) {karta(qaae_card, lastPlayerEarned);}
+
+                    else if(cardAvaliable === false) {
+
+                        console.log('not replying');
+
+                        // ==> Round End popup
+
+                        setTimeout(() => {
+                            popUp(1, p1Points + p1EarnedCards.length, p2Points + p2EarnedCards.length);
+                        }, 900);
                     }
 
             }
@@ -359,10 +458,12 @@ const logic = function(){
             cardsFight()
 
             setTimeout(() => {
+
                 drop(relmContent, relmTxtContent, rr);
                 lastCardDropped.push(1);
                 cardsFight();
-            }, 100);
+
+            }, 500);
 
 
         });
@@ -379,7 +480,10 @@ logic();
 
 karta();
 
+}
 
-// window.onbeforeunload = e => {
-//     return "Do you want to exit this page?";
-// };
+kartaCore();
+
+window.onbeforeunload = e => {
+    return "Do you want to exit this page?";
+};

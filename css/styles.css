@@ -13,8 +13,8 @@
     box-sizing: border-box;
     font-family: 'Press Start 2P', cursive;
     color: var(--white);
-    
-    
+
+
 }
 
 body{
@@ -23,6 +23,7 @@ body{
 
 #main-container{
     visibility: hidden;
+    /* filter: blur(2rem); */
 }
 
 #play{
@@ -34,7 +35,7 @@ body{
     margin-top: 3rem;
 }
 .player-username, .enemy-username {
-    
+
     padding: 1%;
     width: 400px;
     height: 100px;
@@ -48,6 +49,7 @@ body{
     width: 400px;
     height: 100px;
     font-size: 38px;
+
     background-color: var(--green);
     color: var(--white);
 }
