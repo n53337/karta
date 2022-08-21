@@ -23,7 +23,7 @@ function kartaCore() {
 
     // * PopUp Template *
 
-    const popUp = (_round, _p1Points, _p2Points)=>{
+    const popUp = (_round, _p1Points, _p2Points, _next, _exit)=>{
 
         document.getElementById('main-container').style.filter = 'blur(2rem)';
 
@@ -41,8 +41,8 @@ function kartaCore() {
             </div>
         </div>
         <div class="btns">
-            <button class="next">Next Round</button>
-            <button class="exit">exit</button>
+            <button class="next" >Next Round</button>
+            <button class="exit" >exit</button>
         </div>
 
         </aside>
@@ -102,7 +102,8 @@ function kartaCore() {
         </style>
 
         `)
-
+        document.querySelector('.next').addEventListener('click', ()=>{_next()})
+        document.querySelector('.exit').addEventListener('click', ()=>{_exit()})
     }
 
     // popUp();
@@ -158,6 +159,7 @@ function karta(_add, _lastPlayerEarned) {
     let cardAvaliable = true;
     let p2Points;
     let p1Points;
+
     document.querySelector('.p1-cards').insertAdjacentHTML(`beforeend`, `<div class="rcard p1-card1"><p>K</p><h2>a</h6><h1>K</h1></div>
     <div class="rcard p1-card2"><p>K</p><h2>a</h6><h1>K</h1></div>
     <div class="rcard p1-card3"><p>K</p><h2>a</h6><h1>K</h1></div>
@@ -220,6 +222,7 @@ for(let i = 0; i<p1QaaeCard.length; i++){
 const logic = function(){
 
     const elms = document.querySelectorAll('.card');
+
 
     // ==> points logic
 
@@ -398,6 +401,7 @@ const logic = function(){
                         };
 
 
+
                         // ==> bunt
 
                         if(qaae_card[qaae_card.length-1].n === qaae_card[qaae_card.length-2].n && qaae_card.length >= 2){
@@ -444,13 +448,31 @@ const logic = function(){
 
                     else if(cardAvaliable === false) {
 
-                        console.log('not replying');
+                        pPoints(1,p1EarnedCards.length);
+                        pPoints(2,p2EarnedCards.length);
 
                         // ==> Round End popup
 
+                        console.warn(p1Points, p2Points);
+
                         setTimeout(() => {
-                            popUp(1, p1Points + p1EarnedCards.length, p2Points + p2EarnedCards.length);
+
+
+                            const nextRound = ()=>{
+                                document.getElementById('popup').remove();
+                                document.getElementById('main-container').style.filter = 'blur(0rem)';
+                                kartaCore();
+                            }
+
+                            const exitRound = ()=>console.warn('exit Round');
+
+                            popUp(1, p1Points , p2Points , nextRound, exitRound);
+
                         }, 900);
+                    }
+
+                    if (p1Points >= 100 || p2Points >= 100) {
+                        console.log('End Game');
                     }
 
             }
@@ -463,14 +485,14 @@ const logic = function(){
                 lastCardDropped.push(1);
                 cardsFight();
 
-            }, 500);
+            }, 100);
+
 
 
         });
 
 
     });
-
 
 };
 
@@ -484,6 +506,6 @@ karta();
 
 kartaCore();
 
-window.onbeforeunload = e => {
-    return "Do you want to exit this page?";
-};
+// window.onbeforeunload = e => {
+//     return "Do you want to exit this page?";
+// };
